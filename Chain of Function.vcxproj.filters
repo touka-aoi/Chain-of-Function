@@ -15,12 +15,15 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ChainFunction.cpp">
+      <Filter>リソース ファイル</Filter>
+    </ClCompile>
     <ClCompile Include="main.cpp">
       <Filter>リソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="main.hpp">
+    <ClInclude Include="ChainFunction.hpp">
       <Filter>リソース ファイル</Filter>
     </ClInclude>
   </ItemGroup>

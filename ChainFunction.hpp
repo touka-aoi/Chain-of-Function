@@ -5,31 +5,41 @@
 #pragma comment(lib, "opencv_world490.lib")
 #endif
 #include <list>
-#include <map>
 #include <opencv2/opencv.hpp>
 
-// Moduleは呼び出しの振る舞いを定義する基底抽象クラス
-template<typename Result, typename... Args>
-class Module {
-public:
-	virtual Result call(Args... args) = 0;
-	virtual ~Module() {}
-};
+namespace fc 
+{
 
-// ContainerはModuleを格納し適用するクラス
-template<typename Result, typename... Args>
-class Container : Module<Result, Args> {
-public:
-	Container(Module... modules) {
-		(_function_list.push_back(funcs), ...);
+	// Moduleは呼び出しの振る舞いを定義する基底クラス
+	class Module {
+	public:
+		virtual void* call(void* input) = 0;
+		virtual ~Module() {}
 	};
-	Result call(Args args) override {
-		for (auto& function : _function_list) {
-			args = function->call(args);
-		}
-		return args;
+
+	class Function : public Module {
+	public:
+		virtual void* call(void* input) = 0;
+	private:
 	};
-	~Container() {}
-private:
-	std::list<std::shared_ptr<Module<Result, Arg>>> _function_list;
-};
+
+	class Container : public Module {
+	public:
+		Container(std::list<Module*> modules);
+		void* call(void* input) override;
+	private:
+		std::list<Module*> _functions_list;
+	};
+}
+
+namespace fc {
+
+	class ResizeFunction : public Function {
+	public:
+		ResizeFunction(int width, int height);
+		void* call(void* input) override;
+	private:
+		int _width;
+		int _height;
+	};
+}
